@@ -126,13 +126,14 @@ const Game = () => {
         }
         let newCards = Cards.filter(card => card.numbers !== selectedCard)
         setgreenIsNext(!greenIsNext)
-        setCards(newCards)
+        // setCards(newCards)
         console.log(board)
         console.log(Cards)
     }
 
-    const handleCardSelect = (card) => {
-        setSelectedCard(card)
+    const handleCardSelect = (number) => {
+        setSelectedCard(number)
+        console.log(selectedCard)
     }
 
     return (

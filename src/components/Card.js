@@ -8,6 +8,7 @@ const Card = ({ displayNumber, number, onClick, selected }) => {
       }
     }
     amISelected()
+    console.log(displayNumber, number, selected)
     return <button
     style={{
         border: `${color}`,
