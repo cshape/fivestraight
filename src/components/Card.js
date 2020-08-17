@@ -1,9 +1,16 @@
 import React from 'react'
 
-const Card = ({ number, onClick }) => {
+const Card = ({ number, onClick, selected }) => {
+    let color = '2px solid darkblue'
+    let amISelected = () => {
+      if (number == selected) {
+        color = '4px solid red'
+      }
+    }
+    amISelected()
     return <button
     style={{
-        border: '2px solid darkblue',
+        border: `${color}`,
         fontSize:  '30px',
         fontWeight: '800',
         cursor: 'pointer',

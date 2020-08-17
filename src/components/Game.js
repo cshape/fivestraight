@@ -18,7 +18,7 @@ const Game = () => {
     const [reds, setReds] = useState(Array(1).fill(null))
     const [greenIsNext, setgreenIsNext] = useState(true)
     const [Cards, setCards] = useState([])
-    const [selectedCard, setSelectedCard] = useState('')
+    const [selectedCard, setSelectedCard] = useState(null)
 
     const winner = calculateWinner(board)
     const actualNumbers = [
@@ -72,12 +72,14 @@ const Game = () => {
 
     createSquares();
     
-    const handleClick = (i) => {
+    const handleClick = (i, square) => {
         const boardCopy = [...board]
         // if user clicks an occupied square or if game is won, return
         if (winner) return;
         if (reds.includes(i)) return;
         if (greens.includes(i)) return;
+        if (selectedCard == null) return;
+        if (selectedCard > square.displaynumber) return;
         if (greenIsNext === true) {
             setGreens(greens.concat(i))
             boardCopy.map((square) => {
@@ -93,22 +95,23 @@ const Game = () => {
                 }
             })
         }
+        setSelectedCard(null)
         setBoard(boardCopy);
         setgreenIsNext(!greenIsNext)
+        let newCards = Cards.filter(card => card !== selectedCard)
+        setCards(newCards)
         console.log(board)
     }
 
     const handleCardSelect = (card) => {
-        console.log(card)
-        console.log("test")
+        setSelectedCard(card)
     }
 
     return (
         <>
-            <h1> 5ive Straight</h1>
             <Board squares={board} onClick={handleClick} />
             <div styles={styles}>
-                <InfoPane cards={Cards} greenNext={greenIsNext} onClick={handleCardSelect}/>
+                <InfoPane selected={selectedCard} cards={Cards} greenNext={greenIsNext} onClick={handleCardSelect}/>
             </div>
         </>
     )

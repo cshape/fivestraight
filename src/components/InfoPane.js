@@ -9,11 +9,15 @@ const style = {
     margin: '0 top'
 }
 
-const InfoPane = ({ cards, greenNext, onClick }) => (
+const InfoPane = ({ cards, greenNext, onClick, selected }) => (
     <div style={style}>
         <p>{greenNext ? "It's Green's turn" : "It's Red's turn"}</p>
         {cards.map((card, i) => (
-            <Card key={i} number={card} onClick={() => onClick(card)} />
+            <Card selected={selected}
+                  key={i} 
+                  number={card} 
+                  onClick={() => onClick(card)} 
+            />
         ))}
     </div>
 )

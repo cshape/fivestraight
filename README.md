@@ -8,6 +8,7 @@
 - [ ] Card pickups and hands (multiple players)
 - [ ] Handle turns
 - [ ] Win condition
+- [ ] Persistence 
 - [ ] Multiplayer
 - [ ] Polish
 
