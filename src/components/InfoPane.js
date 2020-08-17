@@ -1,5 +1,7 @@
 import React from 'react'
 import Card from './Card'
+import GreenCardHand from './GreenCardHand'
+import RedCardHand from './RedCardHand'
 
 const style = {
     borderRadius: '10px',
@@ -12,13 +14,8 @@ const style = {
 const InfoPane = ({ cards, greenNext, onClick, selected }) => (
     <div style={style}>
         <p>{greenNext ? "It's Green's turn" : "It's Red's turn"}</p>
-        {cards.map((card, i) => (
-            <Card selected={selected}
-                  key={i} 
-                  number={card} 
-                  onClick={() => onClick(card)} 
-            />
-        ))}
+            {greenNext ? <GreenCardHand /> : <RedCardHand />
+        }
     </div>
 )
 

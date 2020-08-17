@@ -12,6 +12,7 @@ const styles = {
 
 const Game = () => {
 
+    const [players, setPlayers] = useState(Array(2).fill(null))
     const [board, setBoard] = useState(Array(100).fill(null))
     const [loaded, setLoaded] = useState(false)
     const [greens, setGreens ] = useState(Array(1).fill(null))
@@ -59,14 +60,27 @@ const Game = () => {
             newArray.push(sqr)
         })
         setBoard([...newArray])
-        let greenCards = []
+        let cardsClone = [];
+        let greenCardObj = {};
+        let redCardObj = {};
+        let greenCards = [];
+        let redCards = [];
         for (var i = 3; i >= 0; i--) {
             let pickup = availableCards.splice(Math.floor(Math.random() * availableCards.length), 1);
             greenCards = [...greenCards, ...pickup]
-            console.log(availableCards);
-            console.log(greenCards)
+            greenCardObj.name = 'green';
+            greenCardObj.numbers = greenCards;
           }
-        setCards(greenCards)
+        for (var i = 3; i >= 0; i--) {
+            let pickup = availableCards.splice(Math.floor(Math.random() * availableCards.length), 1);
+            redCards = [...redCards, ...pickup]
+            redCardObj.name = 'red';
+            redCardObj.numbers = greenCards;
+          }
+        cardsClone.push(greenCardObj)
+        cardsClone.push(redCardObj)
+        console.log(cardsClone)
+        setCards(cardsClone)
         setLoaded(true)
     }
 
@@ -98,7 +112,18 @@ const Game = () => {
         setSelectedCard(null)
         setBoard(boardCopy);
         setgreenIsNext(!greenIsNext)
-        let newCards = Cards.filter(card => card !== selectedCard)
+        if (greenIsNext == true) {
+            let newCards = Cards[0].numbers.filter(number => number !== selectedCard)
+            let newCardObj = Cards;
+            newCardObj[0].numbers = newCards;
+            setCards(newCardObj)
+        } else {
+            let newCards = Cards[1].numbers.filter(number => number !== selectedCard)
+            let newCardObj = Cards;
+            newCardObj[1].numbers = newCards;
+            setCards(newCardObj)
+        }
+        let newCards = Cards.filter(card => card.numbers !== selectedCard)
         setCards(newCards)
         console.log(board)
     }
