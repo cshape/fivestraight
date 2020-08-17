@@ -1,6 +1,7 @@
 import React from 'react'
+import Card from './Card'
 
-const RedCardHand = ({ number, onClick, selected }) => {
+const RedCardHand = ({ cards, number, onClick, selected }) => {
     let color = '2px solid darkblue'
     let amISelected = () => {
       if (number == selected) {
@@ -8,18 +9,11 @@ const RedCardHand = ({ number, onClick, selected }) => {
       }
     }
     amISelected()
-    return <button
-    style={{
-        border: `${color}`,
-        fontSize:  '30px',
-        fontWeight: '800',
-        cursor: 'pointer',
-        outline: 'none'
-      }}        
-      onClick={onClick}
-      >
-        {number}
-    </button>
+    return <div>
+        {cards[1].numbers.map((number, i) => (
+            <Card color={color} displayNumber={number} key={i} number={i} onClick={onClick} />
+        ))}
+    </div>
 }
 
 export default RedCardHand

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Card = ({ number, onClick, selected }) => {
+const Card = ({ displayNumber, number, onClick, selected }) => {
     let color = '2px solid darkblue'
     let amISelected = () => {
       if (number == selected) {
@@ -18,7 +18,7 @@ const Card = ({ number, onClick, selected }) => {
       }}        
       onClick={onClick}
       >
-        {number}
+        {displayNumber}
     </button>
 }
 

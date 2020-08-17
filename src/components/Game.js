@@ -75,7 +75,7 @@ const Game = () => {
             let pickup = availableCards.splice(Math.floor(Math.random() * availableCards.length), 1);
             redCards = [...redCards, ...pickup]
             redCardObj.name = 'red';
-            redCardObj.numbers = greenCards;
+            redCardObj.numbers = redCards;
           }
         cardsClone.push(greenCardObj)
         cardsClone.push(redCardObj)
@@ -111,21 +111,24 @@ const Game = () => {
         }
         setSelectedCard(null)
         setBoard(boardCopy);
-        setgreenIsNext(!greenIsNext)
         if (greenIsNext == true) {
             let newCards = Cards[0].numbers.filter(number => number !== selectedCard)
             let newCardObj = Cards;
             newCardObj[0].numbers = newCards;
             setCards(newCardObj)
+            console.log("green: ", newCards)
         } else {
             let newCards = Cards[1].numbers.filter(number => number !== selectedCard)
             let newCardObj = Cards;
             newCardObj[1].numbers = newCards;
             setCards(newCardObj)
+            console.log("red: ", newCards)
         }
         let newCards = Cards.filter(card => card.numbers !== selectedCard)
+        setgreenIsNext(!greenIsNext)
         setCards(newCards)
         console.log(board)
+        console.log(Cards)
     }
 
     const handleCardSelect = (card) => {
