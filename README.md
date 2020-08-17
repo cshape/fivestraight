@@ -2,14 +2,14 @@
 
 ### Todos
 
-[x] Make the board and shit
-[x] Handle Clicks on the board
-[x] Card pickups (one player)
-[ ] Card pickups and hands (multiple players)
-[ ] Handle turns
-[ ] Win condition
-[ ] Multiplayer
-[ ] Polish
+- [x] Make the board and shit
+- [x] Handle Clicks on the board
+- [x] Card pickups (one player)
+- [ ] Card pickups and hands (multiple players)
+- [ ] Handle turns
+- [ ] Win condition
+- [ ] Multiplayer
+- [ ] Polish
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
