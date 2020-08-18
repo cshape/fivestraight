@@ -5,8 +5,8 @@
 - [x] Make the board and shit
 - [x] Handle Clicks on the board
 - [x] Card pickups (one player)
-- [ ] Card pickups and hands (multiple players)
-- [ ] Handle turns
+- [x] Card pickups and hands (multiple players)
+- [x] Handle turns
 - [ ] Win condition
 - [ ] Persistence 
 - [ ] Multiplayer
