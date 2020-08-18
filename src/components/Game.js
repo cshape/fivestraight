@@ -79,7 +79,6 @@ const Game = () => {
           }
         cardsClone.push(greenCardObj)
         cardsClone.push(redCardObj)
-        console.log(cardsClone)
         setCards(cardsClone)
         setLoaded(true)
     }
@@ -89,6 +88,7 @@ const Game = () => {
     const handleClick = (i, square) => {
         const boardCopy = [...board]
         // if user clicks an occupied square or if game is won, return
+        calculateWinner(board)
         if (winner) return;
         if (reds.includes(i)) return;
         if (greens.includes(i)) return;

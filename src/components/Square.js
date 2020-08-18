@@ -1,7 +1,6 @@
 import React from 'react'
 
 const Square = ({ onClick, displayNumber, color }) => {
-    console.log(color)
     return <button
     style={{
         background: `${color}`,
