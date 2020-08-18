@@ -109,6 +109,7 @@ const Game = () => {
                 }
             })
         }
+        console.log(selectedCard)
         setSelectedCard(null)
         setBoard(boardCopy);
         if (greenIsNext == true) {
@@ -136,11 +137,36 @@ const Game = () => {
         console.log(selectedCard)
     }
 
+    const pickupCard = () => {
+        let cardsClone = [];
+        let greenCards = Cards[0];
+        let redCards = Cards[1];
+        let pickupNumber = availableCards.splice(Math.floor(Math.random() * availableCards.length), 1);
+        console.log(pickupNumber)
+        if (greenIsNext) {
+            greenCards.numbers.push(pickupNumber)
+            console.log(greenCards.numbers)
+            console.log(greenCards)
+        } else {
+            redCards.numbers.push(pickupNumber)
+            console.log(redCards)
+        }
+        cardsClone.push(greenCards)
+        cardsClone.push(redCards)
+        setCards([...cardsClone])
+        setgreenIsNext(!greenIsNext)
+    }
+
     return (
         <>
             <Board squares={board} onClick={handleClick} />
             <div styles={styles}>
-                <InfoPane selected={selectedCard} cards={Cards} greenNext={greenIsNext} onClick={handleCardSelect}/>
+                <InfoPane selected={selectedCard} 
+                          cards={Cards} 
+                          greenNext={greenIsNext} 
+                          onClick={handleCardSelect}
+                          pickUp={pickupCard}
+                          />
             </div>
         </>
     )

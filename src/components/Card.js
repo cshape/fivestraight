@@ -3,12 +3,11 @@ import React from 'react'
 const Card = ({ displayNumber, number, onClick, selected }) => {
     let color = '2px solid darkblue'
     let amISelected = () => {
-      if (number == selected) {
+      if (displayNumber == selected) {
         color = '4px solid red'
       }
     }
     amISelected()
-    console.log(displayNumber, number, selected)
     return <button
     style={{
         border: `${color}`,
