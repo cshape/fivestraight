@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { calculateWinner } from '../helpers.js'
 import Board from './Board'
 import InfoPane from './InfoPane'
+import io from "socket.io-client";
+const ENDPOINT = "http://127.0.0.1:4000";
+const socket = io(ENDPOINT);
 
 const styles = {
     width: '200px',
@@ -21,6 +24,7 @@ const Game = () => {
     const [Cards, setCards] = useState([])
     const [selectedCard, setSelectedCard] = useState(null)
     const [myPlayer, setMyPlayer] = useState('')
+    const [response, setResponse] = useState("");
 
     const winner = calculateWinner(board)
     const actualNumbers = [
@@ -49,7 +53,16 @@ const Game = () => {
         82, 83, 84, 85, 86, 87, 88, 89, 90, 91
     ]
 
-    let createSquares = () => {
+    useEffect(() => {
+        socket.on("FromAPI", data => {
+          setResponse(data);
+        });
+        socket.on ('turn.over', function (data) {
+            console.log (data);
+        });
+      }, []);
+
+    let createBoard = (board) => {
         if (loaded == true) return;
         let newArray = [] 
 
@@ -84,7 +97,7 @@ const Game = () => {
         setLoaded(true)
     }
 
-    createSquares();
+    createBoard();
     
     const handleClick = (i, square) => {
         const boardCopy = [...board]
@@ -129,6 +142,10 @@ const Game = () => {
         let newCards = Cards.filter(card => card.numbers !== selectedCard)
         setgreenIsNext(!greenIsNext)
         // setCards(newCards)
+        let movetype = "place"
+        socket.emit('move.made', {"hello": "world"});
+        console.log(movetype)
+
         console.log(board)
         console.log(Cards)
     }

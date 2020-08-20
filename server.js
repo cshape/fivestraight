@@ -4,7 +4,7 @@ const socketIo = require("socket.io");
 const app = express();
 const port = process.env.PORT || 4000;
 
-const server = http.Server(app).listen(8080);
+const server = http.Server(app).listen(port);
 const io = socketIo(server);
 
 const rogueplayers = [];
@@ -23,7 +23,7 @@ const board = [
     82, 83, 84, 85, 86, 87, 88, 89, 90, 91
 ]
 
-const Player = (name, id) => {
+function Player(name, id) {
     this.name = name;
     this.id = id;
     this.color = '';
@@ -31,26 +31,42 @@ const Player = (name, id) => {
     this.isConnected = true;
 }
 
-// WHEN PLAYERS VISIT THE PAGE - they choose their name (or if their localStorage has a name we use that) and then can start a new game or join an existing one
+// WHEN PLAYERS VISIT THE PAGE - we start the connection
 
 io.on("connection", function(socket) {
-    
-    let newPlayer = new Player (socket.name, socket.id);
-    rogueplayers.push(newPlayer)
     console.log("New client connected. ID: ", socket.id);
+
+// WHEN PLAYER CHOOSES A NAME - we creat a new Player obj and send it back to the client
+
+socket.on("name.chosen", function(data) {
+    let newPlayer = new Player ("temp name", socket.id);
+    rogueplayers.push(newPlayer)
+    console.log("name chosen for player:", socket.id)
+    socket.emit("name.chosen", data); // Emit for the player who made the move
+});
+
+// WHEN PLAYER CREATES A GAME - a new game object is created and populated, rogueplayer is deleted and moved to the game object
+    
+    socket.on("create.game", function(data) {
+        // check if it was a pickup or put down and update shit
+        console.log("game created")
+        socket.broadcast.emit("move.made", data); // Emit for the player who made the move
+    });
+  
 
     // TODO: add disconnect logic to tick that disconnect Bool in the relevant game for the relevant player
 
     socket.on("disconnect", () => {// Bind event for that socket (player)
         console.log("Client disconnected. ID: ", socket.id);
-        socket.broadcast.emit("clientdisconnect", id);
+        socket.broadcast.emit("clientdisconnect", socket.id);
     });
 
 
     // Event for when any player makes a move
-    socket.on("make.move", function(data) {
+    socket.on("move.made", function(data) {
        // check if it was a pickup or put down and update shit
-        socket.broadcast.emit("move.made", data); // Emit for the player who made the move
+        socket.emit("turn.over", data); // Emit for the player who made the move
+        console.log(data.hello)
     });
 
     // Event to inform player that the opponent left
@@ -59,9 +75,7 @@ io.on("connection", function(socket) {
     });
 });
 
-// WHEN PLAYERS ENTER THEIR NAME - client sends name, server starts a socket connection and creates a temp top level rogueplayer object for them with name and id
 
-// WHEN PLAYER CREATES A GAME - a new game object is created and populated, rogueplayer is deleted and moved to the game object
 
 // WHEN PLAYER JOINS A GAME - rogueplayer is deleted and moved to the game object
 
