@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { calculateWinner } from '../helpers.js'
 import Board from './Board'
 import InfoPane from './InfoPane'
@@ -12,7 +12,7 @@ const styles = {
 
 const Game = () => {
 
-    const [players, setPlayers] = useState(Array(2).fill(null))
+    const [players, setPlayers] = useState(["green", "red"])
     const [board, setBoard] = useState(Array(100).fill(null))
     const [loaded, setLoaded] = useState(false)
     const [greens, setGreens ] = useState(Array(1).fill(null))
@@ -20,6 +20,7 @@ const Game = () => {
     const [greenIsNext, setgreenIsNext] = useState(true)
     const [Cards, setCards] = useState([])
     const [selectedCard, setSelectedCard] = useState(null)
+    const [myPlayer, setMyPlayer] = useState('')
 
     const winner = calculateWinner(board)
     const actualNumbers = [
@@ -48,7 +49,7 @@ const Game = () => {
         82, 83, 84, 85, 86, 87, 88, 89, 90, 91
     ]
 
-    let createSquares = (board) => {
+    let createSquares = () => {
         if (loaded == true) return;
         let newArray = [] 
 
@@ -158,7 +159,7 @@ const Game = () => {
     }
 
     return (
-        <>
+        <>{}
             <Board squares={board} onClick={handleClick} />
             <div styles={styles}>
                 <InfoPane selected={selectedCard} 
