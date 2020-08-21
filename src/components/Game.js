@@ -66,6 +66,9 @@ const Game = () => {
         socket.on ('game.created', function (data) {
             console.log (data);
         });
+        socket.on ('game.joined', function (data) {
+            console.log (data);
+        });
       }, []);
 
     let createBoard = (board) => {
@@ -197,7 +200,7 @@ const Game = () => {
         let game = prompt("Whose game do you want to join?")
         let data = {
             name: name,
-            name: game
+            game: game
         }
         socket.emit('join.game', data)
     }

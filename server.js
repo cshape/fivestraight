@@ -35,11 +35,6 @@ function Card(number, i) {
     this.number = i;
 }
 
-function Turn(players, cards) {
-    this.players = players;
-    this.cards = cards
-}
-
 let games = [];
 
 
@@ -51,7 +46,6 @@ io.on("connection", function(socket) {
 // WHEN PLAYER CHOOSES A NAME - we creat a new Player obj and send it back to the client (not done on frontend, backend fine)
 
 socket.on("choose.name", function(data) {
-    console.log(data)
     let newPlayer = new Player (data);
     rogueplayers.push(newPlayer)
     console.log("new player:", newPlayer.name)
@@ -61,7 +55,7 @@ socket.on("choose.name", function(data) {
 // WHEN PLAYER CREATES A GAME - a new game object is created and populated, rogueplayer is deleted and moved to the game object
     
     socket.on("create.game", function(data) {
-        let game = [];
+        let game = {};
         console.log("game created")
         let players = [];
         let player = rogueplayers.filter(player => player.name = data);
@@ -71,26 +65,29 @@ socket.on("choose.name", function(data) {
             let card = new Card(number, i);
             return card;
         })
-        console.log(cards)
-        let turn = new Turn(players, cards)
-        game.push(turn)
+        game.players = players;
+        game.cards = cards;
         socket.emit("game.created", game);
         games.push(game)
+        console.log(game)
     });
 
     // WHEN PLAYER JOINS A GAME - rogueplayer is deleted and moved to the game object
   
     socket.on("join.game", function(data) {
-        console.log(data)
+        let game = {}
         let newPlayer = new Player (data.name);
         console.log("new player:", newPlayer.name)
-        let existingGame = games.filter(oldgame => {
-            oldgame[0].players.map(player => player.name == data.game)
-            console.log(oldgame)
+        games.map(oldgame => {
+            oldgame.players.map(player => {
+                if (player.name == data.game) {
+                    game = oldgame;
+                }
+            })
         })
-        console.log(existingGame)
-        existingGame.players.push(newPlayer)
-        socket.emit("game.joined", existingGame); // Emit for the player who made the move
+        game.players.push(newPlayer)
+        console.log("game:", game)
+        socket.emit("game.joined", game); // Emit for the player who made the move
     });
 
     // TODO: add disconnect logic to tick that disconnect Bool in the relevant game for the relevant player
