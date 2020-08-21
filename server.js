@@ -7,7 +7,7 @@ const port = process.env.PORT || 4000;
 const server = http.Server(app).listen(port);
 const io = socketIo(server);
 
-const rogueplayers = [];
+let rogueplayers = [];
 
 const board = [
     73, 72, 71, 70, 69, 68, 67, 66, 65, 0,
@@ -29,15 +29,18 @@ function Player(name) {
     this.isConnected = true;
 }
 
-function Card(number) {
+function Card(number, i) {
     this.location = "deck";
-    this.number = number;
+    this.displayNumber = number;
+    this.number = i;
 }
 
 function Turn(players, cards) {
     this.players = players;
     this.cards = cards
 }
+
+let games = [];
 
 
 // WHEN PLAYERS VISIT THE PAGE - we start the connection (done)
@@ -48,7 +51,8 @@ io.on("connection", function(socket) {
 // WHEN PLAYER CHOOSES A NAME - we creat a new Player obj and send it back to the client (not done on frontend, backend fine)
 
 socket.on("choose.name", function(data) {
-    let newPlayer = new Player (data.name);
+    console.log(data)
+    let newPlayer = new Player (data);
     rogueplayers.push(newPlayer)
     console.log("new player:", newPlayer.name)
     socket.emit("name.chosen", newPlayer); // Emit for the player who made the move
@@ -60,18 +64,34 @@ socket.on("choose.name", function(data) {
         let game = [];
         console.log("game created")
         let players = [];
-        let player = rogueplayer.filter(player => player.id = data.id);
-        players.push(player);
-        let cards = board.map(number => {
-            let card = new Card(number);
+        let player = rogueplayers.filter(player => player.name = data);
+        rogueplayers = rogueplayers.filter(player => player.name !== data)
+        players.push(player[0]);
+        let cards = board.map((number, i) => {
+            let card = new Card(number, i);
             return card;
         })
         console.log(cards)
         let turn = new Turn(players, cards)
         game.push(turn)
-        socket.emit("game.created", game); // Emit for the player who made the move
+        socket.emit("game.created", game);
+        games.push(game)
     });
+
+    // WHEN PLAYER JOINS A GAME - rogueplayer is deleted and moved to the game object
   
+    socket.on("join.game", function(data) {
+        console.log(data)
+        let newPlayer = new Player (data.name);
+        console.log("new player:", newPlayer.name)
+        let existingGame = games.filter(oldgame => {
+            oldgame[0].players.map(player => player.name == data.game)
+            console.log(oldgame)
+        })
+        console.log(existingGame)
+        existingGame.players.push(newPlayer)
+        socket.emit("game.joined", existingGame); // Emit for the player who made the move
+    });
 
     // TODO: add disconnect logic to tick that disconnect Bool in the relevant game for the relevant player
 
@@ -96,7 +116,7 @@ socket.on("choose.name", function(data) {
 
 
 
-// WHEN PLAYER JOINS A GAME - rogueplayer is deleted and moved to the game object
+
 
 // WHEN PLAYER DISCONNECTS - shift them to disconnected status and display error message
 

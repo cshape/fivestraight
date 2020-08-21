@@ -64,7 +64,7 @@ const Game = () => {
             console.log (data);
         });
         socket.on ('game.created', function (data) {
-            console.log (data[0]);
+            console.log (data);
         });
       }, []);
 
@@ -183,14 +183,33 @@ const Game = () => {
     }
 
     const nameSelf = () => {
-        let name = prompt("What is your name");
+        let name = prompt("What is your name?");
         socket.emit('choose.name', name)
     }
+
+    const newGame = () => {
+        let name = prompt("What is your name?");
+        socket.emit('create.game', name)
+    }
+
+    const joinGame = () => {
+        let name = prompt("What is your name?")
+        let game = prompt("Whose game do you want to join?")
+        let data = {
+            name: name,
+            name: game
+        }
+        socket.emit('join.game', data)
+    }
+
+
 
     return (
         <>{}
             <Board squares={board} onClick={handleClick} />
             <button onClick={nameSelf}>Name Self</button>
+            <button onClick={newGame}>Create Game</button>
+            <button onClick={joinGame}>Join Game</button>
             <div styles={styles}>
                 <InfoPane selected={selectedCard} 
                           cards={Cards} 
