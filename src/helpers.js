@@ -8,7 +8,7 @@ const squares = [
   null, null, null
 ];
 
-console.log(calculateWinner(squares))
+console.log("TODO: figure out how to check winning state")
 
 // export function calculateWinner(squares) {
 //   let rows = []

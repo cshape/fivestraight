@@ -8,7 +8,6 @@ const server = http.Server(app).listen(port);
 const io = socketIo(server);
 
 const rogueplayers = [];
-const game = {};
 
 const board = [
     73, 72, 71, 70, 69, 68, 67, 66, 65, 0,
@@ -23,34 +22,54 @@ const board = [
     82, 83, 84, 85, 86, 87, 88, 89, 90, 91
 ]
 
-function Player(name, id) {
+function Player(name) {
     this.name = name;
-    this.id = id;
     this.color = '';
     this.isActive = false;
     this.isConnected = true;
 }
 
-// WHEN PLAYERS VISIT THE PAGE - we start the connection
+function Card(number) {
+    this.location = "deck";
+    this.number = number;
+}
+
+function Turn(players, cards) {
+    this.players = players;
+    this.cards = cards
+}
+
+
+// WHEN PLAYERS VISIT THE PAGE - we start the connection (done)
 
 io.on("connection", function(socket) {
     console.log("New client connected. ID: ", socket.id);
 
-// WHEN PLAYER CHOOSES A NAME - we creat a new Player obj and send it back to the client
+// WHEN PLAYER CHOOSES A NAME - we creat a new Player obj and send it back to the client (not done on frontend, backend fine)
 
-socket.on("name.chosen", function(data) {
-    let newPlayer = new Player ("temp name", socket.id);
+socket.on("choose.name", function(data) {
+    let newPlayer = new Player (data.name);
     rogueplayers.push(newPlayer)
-    console.log("name chosen for player:", socket.id)
-    socket.emit("name.chosen", data); // Emit for the player who made the move
+    console.log("new player:", newPlayer.name)
+    socket.emit("name.chosen", newPlayer); // Emit for the player who made the move
 });
 
 // WHEN PLAYER CREATES A GAME - a new game object is created and populated, rogueplayer is deleted and moved to the game object
     
     socket.on("create.game", function(data) {
-        // check if it was a pickup or put down and update shit
+        let game = [];
         console.log("game created")
-        socket.broadcast.emit("move.made", data); // Emit for the player who made the move
+        let players = [];
+        let player = rogueplayer.filter(player => player.id = data.id);
+        players.push(player);
+        let cards = board.map(number => {
+            let card = new Card(number);
+            return card;
+        })
+        console.log(cards)
+        let turn = new Turn(players, cards)
+        game.push(turn)
+        socket.emit("game.created", game); // Emit for the player who made the move
     });
   
 

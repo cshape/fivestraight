@@ -60,6 +60,12 @@ const Game = () => {
         socket.on ('turn.over', function (data) {
             console.log (data);
         });
+        socket.on ('name.chosen', function (data) {
+            console.log (data);
+        });
+        socket.on ('game.created', function (data) {
+            console.log (data[0]);
+        });
       }, []);
 
     let createBoard = (board) => {
@@ -173,11 +179,18 @@ const Game = () => {
         cardsClone.push(redCards)
         setCards([...cardsClone])
         setgreenIsNext(!greenIsNext)
+        socket.emit('create.game', {"id": "world"});
+    }
+
+    const nameSelf = () => {
+        let name = prompt("What is your name");
+        socket.emit('choose.name', name)
     }
 
     return (
         <>{}
             <Board squares={board} onClick={handleClick} />
+            <button onClick={nameSelf}>Name Self</button>
             <div styles={styles}>
                 <InfoPane selected={selectedCard} 
                           cards={Cards} 
