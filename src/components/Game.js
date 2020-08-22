@@ -54,19 +54,16 @@ const Game = () => {
     ]
 
     useEffect(() => {
-        socket.on("FromAPI", data => {
-          setResponse(data);
-        });
-        socket.on ('turn.over', function (data) {
+        socket.on('turn.over', function (data) {
             console.log (data);
         });
-        socket.on ('name.chosen', function (data) {
+        socket.on('name.chosen', function (data) {
             console.log (data);
         });
-        socket.on ('game.created', function (data) {
+        socket.on('game.created', function (data) {
             console.log (data);
         });
-        socket.on ('game.joined', function (data) {
+        socket.on('game.joined', function (data) {
             console.log (data);
         });
       }, []);
