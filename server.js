@@ -24,7 +24,7 @@ const board = [
 
 function Player(name) {
     this.name = name;
-    this.color = '';
+    this.color = 'green';
     this.isActive = false;
     this.isConnected = true;
 }
@@ -42,6 +42,8 @@ let games = [];
 
 io.on("connection", function(socket) {
     console.log("New client connected. ID: ", socket.id);
+
+//todo: remove the name self thing and just have create game or join game with no rogueplayers bs
 
 // WHEN PLAYER CHOOSES A NAME - we creat a new Player obj and send it back to the client (not done on frontend, backend fine)
 
@@ -77,6 +79,7 @@ socket.on("choose.name", function(data) {
     socket.on("join.game", function(data) {
         let game = {}
         let newPlayer = new Player (data.name);
+        newPlayer.color = "red"
         console.log("new player:", newPlayer.name)
         games.map(oldgame => {
             oldgame.players.map(player => {
@@ -87,7 +90,7 @@ socket.on("choose.name", function(data) {
         })
         game.players.push(newPlayer)
         console.log("game:", game)
-        socket.emit("game.joined", game); // Emit for the player who made the move
+        socket.emit("game.joined", game);
     });
 
     // TODO: add disconnect logic to tick that disconnect Bool in the relevant game for the relevant player
@@ -97,6 +100,20 @@ socket.on("choose.name", function(data) {
         socket.broadcast.emit("clientdisconnect", socket.id);
     });
 
+    // WHEN CARDS ARE DEALT
+
+    socket.on("deal.cards", function(data) {
+        data.players.map(player => {
+            i = 0
+            while (i < 4) {
+                let randomNumber = Math.floor(Math.random() * 99) + 1;
+                data.cards[randomNumber].location = player.color;
+                i++
+            }
+        })
+        socket.emit("cards.dealt", data)
+        console.log(data)
+    });
 
     // Event for when any player makes a move
     socket.on("move.made", function(data) {

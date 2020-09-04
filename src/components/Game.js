@@ -13,6 +13,11 @@ const styles = {
     left: '0'
 }
 
+const ButtonStyles = {
+    flex: 1,
+    flexDirection: 'column'
+}
+
 const Game = () => {
 
     const [players, setPlayers] = useState(["green", "red"])
@@ -25,6 +30,8 @@ const Game = () => {
     const [selectedCard, setSelectedCard] = useState(null)
     const [myPlayer, setMyPlayer] = useState('')
     const [response, setResponse] = useState("");
+    const [game, setGame] = useState({})
+    const [isAGame, setisAGame] = useState(false)
 
     const winner = calculateWinner(board)
     const actualNumbers = [
@@ -61,14 +68,21 @@ const Game = () => {
             console.log (data);
         });
         socket.on('game.created', function (data) {
-            console.log (data);
+            setGame(data);
+            console.log(game)
         });
         socket.on('game.joined', function (data) {
-            console.log (data);
+            setGame(data);
         });
+        socket.on('cards.dealt', function (data) {
+            setGame(data);
+            setisAGame(true);
+            console.log(game)
+        });
+        
       }, []);
-
-    let createBoard = (board) => {
+    
+    let createBoard = () => {
         if (loaded == true) return;
         let newArray = [] 
 
@@ -202,22 +216,39 @@ const Game = () => {
         socket.emit('join.game', data)
     }
 
+    const dealCards = () => {
+        socket.emit('deal.cards', game)
+    }
+
 
 
     return (
         <>{}
-            <Board squares={board} onClick={handleClick} />
-            <button onClick={nameSelf}>Name Self</button>
-            <button onClick={newGame}>Create Game</button>
-            <button onClick={joinGame}>Join Game</button>
+        <>
+        {isAGame ?
             <div styles={styles}>
-                <InfoPane selected={selectedCard} 
-                          cards={Cards} 
-                          greenNext={greenIsNext} 
-                          onClick={handleCardSelect}
-                          pickUp={pickupCard}
-                          />
+             <Board squares={board} onClick={handleClick} />
+            <InfoPane selected={selectedCard} 
+                      cards={game.cards} 
+                      greenNext={greenIsNext} 
+                      onClick={handleCardSelect}
+                      pickUp={pickupCard}
+                      />
             </div>
+            :
+            <div></div>
+            }
+        </>
+            
+            
+            <div style={ButtonStyles}>
+                <button onClick={nameSelf}>Name Self</button>
+                <button onClick={newGame}>Create Game</button>
+                <button onClick={joinGame}>Join Game</button>
+                <button onClick={dealCards}>Deal Cards</button>
+            </div>
+            
+            
         </>
     )
 }

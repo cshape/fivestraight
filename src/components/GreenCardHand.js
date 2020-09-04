@@ -10,8 +10,8 @@ const GreenCardHand = ({ cards, number, onClick, selected }) => {
     }
     amISelected()
     return <div>
-        {cards[0].numbers.map((number, i) => (
-            <Card selected={selected} color={color} displayNumber={number} key={i} number={i} onClick={() => onClick(number)} />
+        {cards.map((card, i) => (
+            <Card selected={selected} color={color} displayNumber={card.displayNumber} key={i} number={number} onClick={() => onClick(number)} />
         ))}
     </div>
 }

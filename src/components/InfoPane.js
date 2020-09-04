@@ -9,13 +9,19 @@ const style = {
     margin: '0 left'
 }
 
+
+
 const InfoPane = ({ pickUp, cards, greenNext, onClick, selected }) => (
     <div style={style}>
         <p>{greenNext ? "It's Green's turn" : "It's Red's turn"}</p>
             {greenNext ? 
-            <GreenCardHand cards={cards} selected={selected} onClick={onClick} /> : 
-            <RedCardHand cards={cards} selected={selected} onClick={onClick}  />
-            // todo make the cards show up in those components
+            <GreenCardHand cards={cards.filter(card => card.location == "green")} 
+            selected={selected} onClick={onClick} 
+            /> : 
+            <RedCardHand cards={cards.filter(card => card.location == "red")}
+            selected={selected} 
+            onClick={onClick}  
+            />
         }
     <button onClick={pickUp}>
         Pick up
