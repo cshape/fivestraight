@@ -29,7 +29,6 @@ const Game = () => {
     const [Cards, setCards] = useState([])
     const [selectedCard, setSelectedCard] = useState(null)
     const [myPlayer, setMyPlayer] = useState('')
-    const [response, setResponse] = useState("");
     const [game, setGame] = useState({})
     const [isAGame, setisAGame] = useState(false)
 
@@ -69,10 +68,14 @@ const Game = () => {
         });
         socket.on('game.created', function (data) {
             setGame(data);
+            setMyPlayer(data.players[0].color)
+            console.log(data.players[0].color)
             console.log(game)
         });
         socket.on('game.joined', function (data) {
             setGame(data);
+            setMyPlayer(data.players[1].color)
+            console.log(data.players[1].color)
         });
         socket.on('cards.dealt', function (data) {
             setGame(data);
@@ -233,6 +236,7 @@ const Game = () => {
                       greenNext={greenIsNext} 
                       onClick={handleCardSelect}
                       pickUp={pickupCard}
+                      myPlayer={myPlayer}
                       />
             </div>
             :

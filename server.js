@@ -111,7 +111,7 @@ socket.on("choose.name", function(data) {
                 i++
             }
         })
-        socket.emit("cards.dealt", data)
+        io.emit("cards.dealt", data)
         console.log(data)
     });
 

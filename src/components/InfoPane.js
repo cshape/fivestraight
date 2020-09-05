@@ -1,6 +1,5 @@
 import React from 'react'
-import GreenCardHand from './GreenCardHand'
-import RedCardHand from './RedCardHand'
+import CardHand from './CardHand'
 
 const style = {
     borderRadius: '10px',
@@ -11,18 +10,15 @@ const style = {
 
 
 
-const InfoPane = ({ pickUp, cards, greenNext, onClick, selected }) => (
+const InfoPane = ({ pickUp, cards, greenNext, myPlayer, onClick, selected }) => (
     <div style={style}>
         <p>{greenNext ? "It's Green's turn" : "It's Red's turn"}</p>
-            {greenNext ? 
-            <GreenCardHand cards={cards.filter(card => card.location == "green")} 
-            selected={selected} onClick={onClick} 
-            /> : 
-            <RedCardHand cards={cards.filter(card => card.location == "red")}
+            <CardHand 
+            myPlayer={myPlayer} 
+            cards={cards}
             selected={selected} 
             onClick={onClick}  
             />
-        }
     <button onClick={pickUp}>
         Pick up
     </button>
