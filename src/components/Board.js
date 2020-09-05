@@ -13,7 +13,12 @@ const style = {
 const Board = ({ squares, onClick }) => (
     <div style={style}>
         {squares.map((square, i) => (
-            <Square color={square.color} displayNumber={square.displaynumber} key={i} number={i} onClick={() => onClick(i, square)} />
+            <Square 
+                color={square.color} 
+                displayNumber={square.displayNumber} 
+                key={i} number={square.number} 
+                onClick={() => onClick(square)} 
+            />
         ))}
     </div>
 )

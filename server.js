@@ -33,6 +33,8 @@ function Card(number, i) {
     this.location = "deck";
     this.displayNumber = number;
     this.number = i;
+    this.color = "";
+    this.square = null;
 }
 
 let games = [];
@@ -119,7 +121,8 @@ socket.on("choose.name", function(data) {
     socket.on("move.made", function(data) {
        // check if it was a pickup or put down and update shit
         socket.emit("turn.over", data); // Emit for the player who made the move
-        console.log(data.hello)
+        console.log(data)
+        console.log("turned over baybeee")
     });
 
     // Event to inform player that the opponent left

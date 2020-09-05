@@ -82,95 +82,79 @@ const Game = () => {
             setisAGame(true);
             console.log(game)
         });
-        
+        socket.on('turn.over', function (data) {
+            setGame(data);
+            console.log(game)
+            setSelectedCard(null)
+        });
       }, []);
     
-    let createBoard = () => {
-        if (loaded == true) return;
-        let newArray = [] 
-
-        actualNumbers.map((number, i) => {
-            var sqr = new Object()
-            sqr.displaynumber = number;
-            sqr.id = i;
-            sqr.color = 'lightblue';
-            newArray.push(sqr)
-        })
-        setBoard([...newArray])
-        let cardsClone = [];
-        let greenCardObj = {};
-        let redCardObj = {};
-        let greenCards = [];
-        let redCards = [];
-        for (var i = 3; i >= 0; i--) {
-            let pickup = availableCards.splice(Math.floor(Math.random() * availableCards.length), 1);
-            greenCards = [...greenCards, ...pickup]
-            greenCardObj.name = 'green';
-            greenCardObj.numbers = greenCards;
-          }
-        for (var i = 3; i >= 0; i--) {
-            let pickup = availableCards.splice(Math.floor(Math.random() * availableCards.length), 1);
-            redCards = [...redCards, ...pickup]
-            redCardObj.name = 'red';
-            redCardObj.numbers = redCards;
-          }
-        cardsClone.push(greenCardObj)
-        cardsClone.push(redCardObj)
-        setCards(cardsClone)
-        setLoaded(true)
-    }
-
-    createBoard();
-    
-    const handleClick = (i, square) => {
-        const boardCopy = [...board]
-        // if user clicks an occupied square or if game is won, return
-        calculateWinner(board)
-        if (winner) return;
-        if (reds.includes(i)) return;
-        if (greens.includes(i)) return;
+    const handleClick = (square) => {
         if (selectedCard == null) return;
         if (selectedCard > square.displaynumber) return;
-        if (greenIsNext === true) {
-            setGreens(greens.concat(i))
-            boardCopy.map((square) => {
-                if (square.id == i) {
-                    square.color = 'green'
-                }
-            })
-        } else {
-            setReds(reds.concat(i))
-            boardCopy.map(square => {
-                if (square.id == i) {
-                    square.color = 'red'
-                }
-            })
-        }
-        console.log(selectedCard)
-        setSelectedCard(null)
-        setBoard(boardCopy);
-        if (greenIsNext == true) {
-            let newCards = Cards[0].numbers.filter(number => number !== selectedCard)
-            let newCardObj = Cards;
-            newCardObj[0].numbers = newCards;
-            setCards(newCardObj)
-            console.log("green: ", newCards)
-        } else {
-            let newCards = Cards[1].numbers.filter(number => number !== selectedCard)
-            let newCardObj = Cards;
-            newCardObj[1].numbers = newCards;
-            setCards(newCardObj)
-            console.log("red: ", newCards)
-        }
-        let newCards = Cards.filter(card => card.numbers !== selectedCard)
-        setgreenIsNext(!greenIsNext)
-        // setCards(newCards)
-        let movetype = "place"
-        socket.emit('move.made', {"hello": "world"});
-        console.log(movetype)
+        console.log(square)
+        console.log(game.cards)
+        game.cards.map(card => {
+            if (card == square) {
+                console.log("Matched!!!!")
+                card.location = "board";
+                card.color = myPlayer;
+                card.square = square.displayNumber
+            }
+        })
+        socket.emit('move.made', game)
 
-        console.log(board)
-        console.log(Cards)
+
+
+
+        // const boardCopy = [...board]
+        // // if user clicks an occupied square or if game is won, return
+        // calculateWinner(board)
+        // if (winner) return;
+        // if (reds.includes(i)) return;
+        // if (greens.includes(i)) return;
+        // if (selectedCard == null) return;
+        // if (selectedCard > square.displaynumber) return;
+        // if (greenIsNext === true) {
+        //     setGreens(greens.concat(i))
+        //     boardCopy.map((square) => {
+        //         if (square.id == i) {
+        //             square.color = 'green'
+        //         }
+        //     })
+        // } else {
+        //     setReds(reds.concat(i))
+        //     boardCopy.map(square => {
+        //         if (square.id == i) {
+        //             square.color = 'red'
+        //         }
+        //     })
+        // }
+        // console.log(selectedCard)
+        // setSelectedCard(null)
+        // setBoard(boardCopy);
+        // if (greenIsNext == true) {
+        //     let newCards = Cards[0].numbers.filter(number => number !== selectedCard)
+        //     let newCardObj = Cards;
+        //     newCardObj[0].numbers = newCards;
+        //     setCards(newCardObj)
+        //     console.log("green: ", newCards)
+        // } else {
+        //     let newCards = Cards[1].numbers.filter(number => number !== selectedCard)
+        //     let newCardObj = Cards;
+        //     newCardObj[1].numbers = newCards;
+        //     setCards(newCardObj)
+        //     console.log("red: ", newCards)
+        // }
+        // let newCards = Cards.filter(card => card.numbers !== selectedCard)
+        // setgreenIsNext(!greenIsNext)
+        // // setCards(newCards)
+        // let movetype = "place"
+        // socket.emit('move.made', {"hello": "world"});
+        // console.log(movetype)
+
+        // console.log(board)
+        // console.log(Cards)
     }
 
     const handleCardSelect = (number) => {
@@ -230,7 +214,7 @@ const Game = () => {
         <>
         {isAGame ?
             <div styles={styles}>
-             <Board squares={board} onClick={handleClick} />
+             <Board squares={game.cards} onClick={handleClick} />
             <InfoPane selected={selectedCard} 
                       cards={game.cards} 
                       greenNext={greenIsNext} 
