@@ -9,10 +9,10 @@ const io = socketIo(server);
 
 let rogueplayers = [];
 
-const board = [
+const boardNumbers = [
     73, 72, 71, 70, 69, 68, 67, 66, 65, 0,
     74, 57, 58, 59, 60, 61, 62, 63, 64, 99,
-    75, 56, 21, 20, 19, 28, 17, 36, 37, 98,
+    75, 56, 21, 20, 19, 18, 17, 36, 37, 98,
     76, 55, 22, 13, 14, 15, 16, 35, 38, 97,
     77, 54, 23, 12, 1, 4, 5, 34, 39, 96,
     78, 53, 24, 11, 2, 3, 6, 33, 40, 95,
@@ -33,9 +33,15 @@ function Card(number, i) {
     this.location = "deck";
     this.displayNumber = number;
     this.number = i;
-    this.color = "";
-    this.square = null;
 }
+
+function Square(number, i) {
+    this.displayNumber = number;
+    this.number = i;
+    this.color = "";
+}
+
+
 
 let games = [];
 
@@ -65,12 +71,18 @@ socket.on("choose.name", function(data) {
         let player = rogueplayers.filter(player => player.name = data);
         rogueplayers = rogueplayers.filter(player => player.name !== data)
         players.push(player[0]);
-        let cards = board.map((number, i) => {
+        let cards = boardNumbers.map((number, i) => {
             let card = new Card(number, i);
             return card;
         })
+        let board = boardNumbers.map((number, i) => {
+            let square = new Square(number, i);
+            return square;
+        })
         game.players = players;
         game.cards = cards;
+        game.board = board;
+        game.uniqueID = Math.floor(Math.random() * 99999) + 1
         socket.emit("game.created", game);
         games.push(game)
         console.log(game)
@@ -99,10 +111,12 @@ socket.on("choose.name", function(data) {
 
     socket.on("disconnect", () => {// Bind event for that socket (player)
         console.log("Client disconnected. ID: ", socket.id);
-        socket.broadcast.emit("clientdisconnect", socket.id);
+        io.sockets.emit("clientdisconnect", socket.id);
     });
 
     // WHEN CARDS ARE DEALT
+
+    //TODO: map over only the cards that are remaining, cuz sometimes one player will only get 3 cards.
 
     socket.on("deal.cards", function(data) {
         data.players.map(player => {
@@ -120,15 +134,11 @@ socket.on("choose.name", function(data) {
     // Event for when any player makes a move
     socket.on("move.made", function(data) {
        // check if it was a pickup or put down and update shit
-        socket.emit("turn.over", data); // Emit for the player who made the move
+        io.emit("turn.over", data); // Emit for the player who made the move
         console.log(data)
         console.log("turned over baybeee")
     });
 
-    // Event to inform player that the opponent left
-    socket.on("disconnect", function() {
-       // update the object and then display error
-    });
 });
 
 

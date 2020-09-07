@@ -10,9 +10,9 @@ const style = {
 
 
 
-const InfoPane = ({ pickUp, cards, greenNext, myPlayer, onClick, selected }) => (
+const InfoPane = ({ pickUp, cards, myPlayer, onClick, selected }) => (
     <div style={style}>
-        <p>{greenNext ? "It's Green's turn" : "It's Red's turn"}</p>
+        <p>TODO: say who's turn it is</p>
             <CardHand 
             myPlayer={myPlayer} 
             cards={cards}
