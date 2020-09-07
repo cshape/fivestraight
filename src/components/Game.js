@@ -37,7 +37,6 @@ const Game = () => {
         });
         socket.on('game.joined', function (data) {
             setGame(data);
-            setMyPlayer("red")
         });
         socket.on('cards.dealt', function (data) {
             setGame(data);
@@ -92,6 +91,7 @@ const Game = () => {
             name: name,
             game: game
         }
+        setMyPlayer("red");
         socket.emit('join.game', data)
     }
 

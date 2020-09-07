@@ -104,7 +104,7 @@ socket.on("choose.name", function(data) {
         })
         game.players.push(newPlayer)
         console.log("game:", game)
-        socket.emit("game.joined", game);
+        io.emit("game.joined", game);
     });
 
     // TODO: add disconnect logic to tick that disconnect Bool in the relevant game for the relevant player
