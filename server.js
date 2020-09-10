@@ -119,11 +119,16 @@ socket.on("choose.name", function(data) {
     //TODO: map over only the cards that are remaining, cuz sometimes one player will only get 3 cards.
 
     socket.on("deal.cards", function(data) {
+        let availableCards = data.cards.filter(card => card.location === "deck");
         data.players.map(player => {
             i = 0
             while (i < 4) {
-                let randomNumber = Math.floor(Math.random() * 99) + 1;
-                data.cards[randomNumber].location = player.color;
+                let randomNumber = Math.floor(Math.random() * availableCards.length);
+                let cardNumber = availableCards[randomNumber].displayNumber
+                let card2deal = data.cards.filter(card => card.displayNumber === cardNumber)
+                card2deal[0].location = player.color;
+                availableCards = availableCards.filter(card => card.displayNumber !== cardNumber)
+                console.log(availableCards.length)
                 i++
             }
         })
