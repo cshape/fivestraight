@@ -143,10 +143,16 @@ socket.on("choose.name", function(data) {
 
     // Event for when any player makes a move
     socket.on("pickup.card", function(data) {
-       // check if it was a pickup or put down and update shit
+        data.players.forEach(player => {
+            if (player.isActive === true) {
+                let availableCards = data.cards.filter(card => card.location === "deck");
+                let randomNumber = Math.floor(Math.random() * availableCards.length);
+                let cardNumber = availableCards[randomNumber].displayNumber
+                let card2deal = data.cards.filter(card => card.displayNumber === cardNumber)
+                card2deal[0].location = player.color;
+            }
+        })
         io.emit("turn.over", data); // Emit for the player who made the move
-        console.log(data)
-        console.log("turned over baybeee")
     });
 
 });

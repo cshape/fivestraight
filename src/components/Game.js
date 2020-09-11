@@ -37,7 +37,7 @@ const Game = () => {
         });
         socket.on('cards.dealt', function (data) {
             setGame(data);
-            setisAGame(true);
+            setisAGame(true); 
         });
         socket.on('turn.over', function (data) {
             setGame(data);
@@ -109,9 +109,25 @@ const Game = () => {
     }
 
     const pickupCard = () => {
+        let activePlayer = game.players.filter(player => player.isActive === true);
+        if (activePlayer[0].color !== myPlayer) return alert("It's not your turn, homie.");
+        game.players.some((player, i) => {
+            console.log(player.name, i)
+            if (player.isActive === true) {
+                game.players[i].isActive = false;
+                let nextPlayerNum = i+1;
+                console.log(game.players[nextPlayerNum])
+                if (game.players[nextPlayerNum] !== undefined) {
+                    game.players[nextPlayerNum].isActive = true
+                    return true;
+                } else {
+                    console.log(game.players[0])
+                    game.players[0].isActive = true
+                }
+            }
+        })
         socket.emit('pickup.card', game)
     }
-
 
 
     return (
@@ -120,7 +136,9 @@ const Game = () => {
         {isAGame ?
             <div styles={styles}>
              <Board squares={game.board} onClick={playCard} />
-            <InfoPane selected={selectedCard} 
+            <InfoPane 
+                      game={game}
+                      selected={selectedCard} 
                       cards={game.cards} 
                       onClick={handleCardSelect}
                       pickUp={pickupCard}

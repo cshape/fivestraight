@@ -10,9 +10,14 @@ const style = {
 
 
 
-const InfoPane = ({ pickUp, cards, myPlayer, onClick, selected }) => (
+const InfoPane = ({ pickUp, cards, game, myPlayer, onClick, selected }) => (
     <div style={style}>
-        <p>TODO: say who's turn it is</p>
+        {game.players.map((player, i) => (
+            player.isActive ?
+            <p>It is {player.color}'s turn</p>
+            :
+            <p></p>
+        ))}
             <CardHand 
             myPlayer={myPlayer} 
             cards={cards}
