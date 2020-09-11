@@ -57,6 +57,7 @@ io.on("connection", function(socket) {
 
 socket.on("choose.name", function(data) {
     let newPlayer = new Player (data);
+    newPlayer.isActive = true;
     rogueplayers.push(newPlayer)
     console.log("new player:", newPlayer.name)
     socket.emit("name.chosen", newPlayer); // Emit for the player who made the move
@@ -85,7 +86,6 @@ socket.on("choose.name", function(data) {
         game.uniqueID = Math.floor(Math.random() * 99999) + 1
         socket.emit("game.created", game);
         games.push(game)
-        console.log(game)
     });
 
     // WHEN PLAYER JOINS A GAME - rogueplayer is deleted and moved to the game object
@@ -103,7 +103,6 @@ socket.on("choose.name", function(data) {
             })
         })
         game.players.push(newPlayer)
-        console.log("game:", game)
         io.emit("game.joined", game);
     });
 
@@ -136,8 +135,14 @@ socket.on("choose.name", function(data) {
         console.log(data)
     });
 
+    // Event for when any player plays a card
+
+    socket.on("play.card", function(data) {
+        io.emit("turn.over", data);
+    });
+
     // Event for when any player makes a move
-    socket.on("move.made", function(data) {
+    socket.on("pickup.card", function(data) {
        // check if it was a pickup or put down and update shit
         io.emit("turn.over", data); // Emit for the player who made the move
         console.log(data)
@@ -146,13 +151,6 @@ socket.on("choose.name", function(data) {
 
 });
 
-
-
-
-
-// WHEN PLAYER DISCONNECTS - shift them to disconnected status and display error message
-
-// WHEN PLAYER COMPLETES A TURN - update the game object and send it to the client as the state
 
 // WHEN PLAYERS MARK THE GAME AS COMPLETE - send the game object to the DB and delete it from the server
 

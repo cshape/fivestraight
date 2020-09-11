@@ -25,9 +25,6 @@ const Game = () => {
     const [isAGame, setisAGame] = useState(false)
 
     useEffect(() => {
-        socket.on('turn.over', function (data) {
-            console.log (data);
-        });
         socket.on('name.chosen', function (data) {
             console.log (data);
         });
@@ -41,37 +38,49 @@ const Game = () => {
         socket.on('cards.dealt', function (data) {
             setGame(data);
             setisAGame(true);
-            console.log(game)
-            console.log(myPlayer)
         });
         socket.on('turn.over', function (data) {
             setGame(data);
-            console.log(game)
             setSelectedCard(null)
-            console.log(myPlayer)
         });
       }, []);
     
-    const handleClick = (square) => {
+    const playCard = (square) => {
+        let activePlayer = game.players.filter(player => player.isActive === true);
+        if (activePlayer[0].color !== myPlayer) return alert("It's not your turn, homie.");
         if (selectedCard == null) return;
-        if (selectedCard > square.displayNumber) return;
-        game.cards.map(card => {
+        if (selectedCard > square.displayNumber) return alert(`${selectedCard} is greater than ${square.displayNumber} ya dum-dum.`);
+        game.cards.forEach(card => {
             if (card.displayNumber === selectedCard) {
                 card.location = "board";
             }
         })
-        game.board.map(DBsquare => {
+        game.board.forEach(DBsquare => {
             if (DBsquare.displayNumber === square.displayNumber) {
                 DBsquare.color = myPlayer;
             }
         })
+        game.players.some((player, i) => {
+            console.log(player.name, i)
+            if (player.isActive === true) {
+                game.players[i].isActive = false;
+                let nextPlayerNum = i+1;
+                console.log(game.players[nextPlayerNum])
+                if (game.players[nextPlayerNum] !== undefined) {
+                    game.players[nextPlayerNum].isActive = true
+                    return true;
+                } else {
+                    console.log(game.players[0])
+                    game.players[0].isActive = true
+                }
+            }
+        })
         console.log(game)
-        socket.emit('move.made', game)
+        socket.emit('play.card', game)
     }
 
     const handleCardSelect = (number) => {
         setSelectedCard(number)
-        console.log(selectedCard)
     }
 
     const nameSelf = () => {
@@ -100,7 +109,7 @@ const Game = () => {
     }
 
     const pickupCard = () => {
-        console.log("TODO: this shit")
+        socket.emit('pickup.card', game)
     }
 
 
@@ -110,7 +119,7 @@ const Game = () => {
         <>
         {isAGame ?
             <div styles={styles}>
-             <Board squares={game.board} onClick={handleClick} />
+             <Board squares={game.board} onClick={playCard} />
             <InfoPane selected={selectedCard} 
                       cards={game.cards} 
                       onClick={handleCardSelect}
