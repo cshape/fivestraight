@@ -111,8 +111,14 @@ const Game = () => {
     const pickupCard = () => {
         let activePlayer = game.players.filter(player => player.isActive === true);
         if (activePlayer[0].color !== myPlayer) return alert("It's not your turn, homie.");
+        // todo don't let them pick up if they have 4 cards
+        
         game.players.some((player, i) => {
             console.log(player.name, i)
+
+            // set the active player to be the next player, 
+            // or if we're already on the last player, set it to the first player
+
             if (player.isActive === true) {
                 game.players[i].isActive = false;
                 let nextPlayerNum = i+1;
