@@ -7,12 +7,18 @@
 - [x] Card pickups (one player)
 - [x] Card pickups and hands (multiple players)
 - [x] Handle turns
-- [ ] Player-specific views
+- [x] Player-specific views
 - [ ] Win condition
-- [ ] Persistence 
-- [ ] Multiplayer
-- [ ] Host online
-- [ ] Polish
+- [x] Persistence 
+- [x] Multiplayer
+- [x] Host online
+- [ ] Accessibility + Keyboard Play
+- [ ] LocalStorage for name + id login
+- [ ] Chat + Video
+- [ ] Design
+- [ ] Mobile Views
+- [ ] 1 v 1 v 1
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
