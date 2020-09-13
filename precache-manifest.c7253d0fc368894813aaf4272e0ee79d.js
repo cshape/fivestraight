@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "305ea68344b26fe52443b361c9a70077",
+    "revision": "2302f7deef3e9133259ba4f001b312bf",
     "url": "/fivestraight/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/fivestraight/static/js/2.6d2b9492.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "0b1a3423b593f2c07bc4",
-    "url": "/fivestraight/static/js/main.b7eb6307.chunk.js"
+    "revision": "23fbe4c7e2a9b7b002da",
+    "url": "/fivestraight/static/js/main.538a2997.chunk.js"
   },
   {
     "revision": "6a48d4fd638eab0adeb2",
