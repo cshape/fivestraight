@@ -92,16 +92,20 @@ socket.on("choose.name", function(data) {
   
     socket.on("join.game", function(data) {
         let game = {}
-        let newPlayer = new Player (data.name);
-        newPlayer.color = "red"
-        console.log("new player:", newPlayer.name)
         games.map(oldgame => {
-            oldgame.players.map(player => {
-                if (player.name == data.game) {
-                    game = oldgame;
-                }
-            })
+            if (oldgame.uniqueID == data.game) {
+                game = oldgame
+            } else {
+                console.log("couldn't find that game")
+            }
         })
+        let newPlayer = new Player (data.name);
+        if (game.players.length == 1 || game.players.length == 3) {
+            newPlayer.color = "red"
+        } else {
+            newPlayer.color = "green"
+        }
+        console.log("new player:", newPlayer.name)
         game.players.push(newPlayer)
         io.emit("game.joined", game);
     });
@@ -125,7 +129,7 @@ socket.on("choose.name", function(data) {
                 let randomNumber = Math.floor(Math.random() * availableCards.length);
                 let cardNumber = availableCards[randomNumber].displayNumber
                 let card2deal = data.cards.filter(card => card.displayNumber === cardNumber)
-                card2deal[0].location = player.color;
+                card2deal[0].location = player.name;
                 availableCards = availableCards.filter(card => card.displayNumber !== cardNumber)
                 console.log(availableCards.length)
                 i++
@@ -139,22 +143,13 @@ socket.on("choose.name", function(data) {
 
     socket.on("play.card", function(data) {
         io.emit("turn.over", data);
+        console.log(data)
     });
 
     // Event for when any player makes a move
     socket.on("pickup.card", function(data) {
-        data.players.forEach(player => {
-            if (player.isActive === true) {
-                let availableCards = data.cards.filter(card => card.location === "deck");
-                let randomNumber = Math.floor(Math.random() * availableCards.length);
-                let cardNumber = availableCards[randomNumber].displayNumber
-                let card2deal = data.cards.filter(card => card.displayNumber === cardNumber)
-                card2deal[0].location = player.color;
-            }
-        })
         io.emit("turn.over", data); // Emit for the player who made the move
     });
-
 });
 
 

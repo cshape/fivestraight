@@ -14,7 +14,7 @@ const InfoPane = ({ pickUp, cards, game, myPlayer, onClick, selected }) => (
     <div style={style}>
         {game.players.map((player, i) => (
             player.isActive ?
-            <p>It is {player.color}'s turn</p>
+            <p>It is {player.name}'s turn</p>
             :
             <p></p>
         ))}

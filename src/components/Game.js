@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { calculateWinner } from '../helpers.js'
 import Board from './Board'
 import InfoPane from './InfoPane'
 import io from "socket.io-client";
-const ENDPOINT = "http://127.0.0.1:4000";
+const ENDPOINT = "https://fivestraightserver.herokuapp.com/";
 const socket = io(ENDPOINT);
 
 const styles = {
@@ -30,7 +29,8 @@ const Game = () => {
         });
         socket.on('game.created', function (data) {
             setGame(data);
-            setMyPlayer("green")
+            console.log(data)
+            setisAGame(true)
         });
         socket.on('game.joined', function (data) {
             setGame(data);
@@ -47,35 +47,35 @@ const Game = () => {
     
     const playCard = (square) => {
         let activePlayer = game.players.filter(player => player.isActive === true);
-        if (activePlayer[0].color !== myPlayer) return alert("It's not your turn, homie.");
+        if (activePlayer[0].name !== myPlayer) return alert("It's not your turn, homie.");
         if (selectedCard == null) return;
         if (selectedCard > square.displayNumber) return alert(`${selectedCard} is greater than ${square.displayNumber} ya dum-dum.`);
+        // eslint-disable-next-line
         game.cards.forEach(card => {
             if (card.displayNumber === selectedCard) {
                 card.location = "board";
             }
         })
+        // eslint-disable-next-line
         game.board.forEach(DBsquare => {
             if (DBsquare.displayNumber === square.displayNumber) {
-                DBsquare.color = myPlayer;
+                DBsquare.color = activePlayer[0].color;
             }
         })
+        // eslint-disable-next-line
         game.players.some((player, i) => {
             console.log(player.name, i)
             if (player.isActive === true) {
                 game.players[i].isActive = false;
                 let nextPlayerNum = i+1;
-                console.log(game.players[nextPlayerNum])
                 if (game.players[nextPlayerNum] !== undefined) {
                     game.players[nextPlayerNum].isActive = true
                     return true;
                 } else {
-                    console.log(game.players[0])
                     game.players[0].isActive = true
                 }
             }
         })
-        console.log(game)
         socket.emit('play.card', game)
     }
 
@@ -90,17 +90,19 @@ const Game = () => {
 
     const newGame = () => {
         let name = prompt("What is your name?");
+        setMyPlayer(name)
         socket.emit('create.game', name)
     }
 
     const joinGame = () => {
         let name = prompt("What is your name?")
-        let game = prompt("Whose game do you want to join?")
+        let game = prompt("What is the unique ID of the game you're joining?")
         let data = {
             name: name,
             game: game
         }
-        setMyPlayer("red");
+        setMyPlayer(data.name);
+        console.log(data.game)
         socket.emit('join.game', data)
     }
 
@@ -110,9 +112,18 @@ const Game = () => {
 
     const pickupCard = () => {
         let activePlayer = game.players.filter(player => player.isActive === true);
-        if (activePlayer[0].color !== myPlayer) return alert("It's not your turn, homie.");
+        if (activePlayer[0].name !== myPlayer) return alert("It's not your turn, homie.");
         // todo don't let them pick up if they have 4 cards
-        
+        game.players.forEach(player => {
+            if (player.isActive === true) {
+                let availableCards = game.cards.filter(card => card.location === "deck");
+                let randomNumber = Math.floor(Math.random() * availableCards.length);
+                let cardNumber = availableCards[randomNumber].displayNumber
+                let card2deal = game.cards.filter(card => card.displayNumber === cardNumber)
+                card2deal[0].location = player.name;
+                }
+            })
+        // eslint-disable-next-line
         game.players.some((player, i) => {
             console.log(player.name, i)
 
@@ -150,9 +161,16 @@ const Game = () => {
                       pickUp={pickupCard}
                       myPlayer={myPlayer}
                       />
+            <p>The ID for this game is {game.uniqueID}</p>
+            <h1>Players:</h1>
+            {
+                game.players.map(player => (
+                        <p>{player.name}: {player.color}</p>
+                ))
+            }
             </div>
             :
-            <div></div>
+            <div>Welcome to 5Straight </div>
             }
         </>
             
@@ -163,6 +181,7 @@ const Game = () => {
                 <button onClick={joinGame}>Join Game</button>
                 <button onClick={dealCards}>Deal Cards</button>
             </div>
+            
             
             
         </>

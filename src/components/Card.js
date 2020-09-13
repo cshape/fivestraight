@@ -3,7 +3,7 @@ import React from 'react'
 const Card = ({ displayNumber, number, onClick, selected }) => {
     let color = '2px solid darkblue'
     let amISelected = () => {
-      if (displayNumber == selected) {
+      if (displayNumber === selected) {
         color = '4px solid red'
       }
     }
