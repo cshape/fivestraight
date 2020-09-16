@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Board from './Board'
 import InfoPane from './InfoPane'
 import io from "socket.io-client";
-const ENDPOINT = "https://fivestraightserver.herokuapp.com/";
+// const ENDPOINT = "https://fivestraightserver.herokuapp.com/";
+const ENDPOINT = "http://127.0.0.1:4000"
 const socket = io(ENDPOINT);
 
 const styles = {
@@ -24,13 +25,10 @@ const Game = () => {
     const [isAGame, setisAGame] = useState(false)
 
     useEffect(() => {
-        socket.on('name.chosen', function (data) {
-            console.log (data);
-        });
         socket.on('game.created', function (data) {
             setGame(data);
             console.log(data)
-            setisAGame(true)
+            setisAGame(true); 
         });
         socket.on('game.joined', function (data) {
             setGame(data);
@@ -81,11 +79,6 @@ const Game = () => {
 
     const handleCardSelect = (number) => {
         setSelectedCard(number)
-    }
-
-    const nameSelf = () => {
-        let name = prompt("What is your name?");
-        socket.emit('choose.name', name)
     }
 
     const newGame = () => {
@@ -176,7 +169,6 @@ const Game = () => {
             
             
             <div style={ButtonStyles}>
-                <button onClick={nameSelf}>Name Self</button>
                 <button onClick={newGame}>Create Game</button>
                 <button onClick={joinGame}>Join Game</button>
                 <button onClick={dealCards}>Deal Cards</button>

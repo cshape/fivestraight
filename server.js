@@ -100,6 +100,9 @@ socket.on("choose.name", function(data) {
             }
         })
         let newPlayer = new Player (data.name);
+
+        // todo check if game.players exists before crashing
+        
         if (game.players.length == 1 || game.players.length == 3) {
             newPlayer.color = "red"
         } else {
