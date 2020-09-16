@@ -169,9 +169,9 @@ const Game = () => {
             
             
             <div style={ButtonStyles}>
-                <button onClick={newGame}>Create Game</button>
-                <button onClick={joinGame}>Join Game</button>
-                <button onClick={dealCards}>Deal Cards</button>
+                <button onClick={newGame}>Create a Game</button>
+                <button onClick={joinGame}>Join a Game</button>
+                <button onClick={dealCards}>Deal dem Cards</button>
             </div>
             
             
