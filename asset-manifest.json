@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/fivestraight/static/js/main.f05b1ead.chunk.js",
-    "main.js.map": "/fivestraight/static/js/main.f05b1ead.chunk.js.map",
+    "main.js": "/fivestraight/static/js/main.95339d5f.chunk.js",
+    "main.js.map": "/fivestraight/static/js/main.95339d5f.chunk.js.map",
     "runtime-main.js": "/fivestraight/static/js/runtime-main.486f4968.js",
     "runtime-main.js.map": "/fivestraight/static/js/runtime-main.486f4968.js.map",
     "static/js/2.2b25437e.chunk.js": "/fivestraight/static/js/2.2b25437e.chunk.js",
     "static/js/2.2b25437e.chunk.js.map": "/fivestraight/static/js/2.2b25437e.chunk.js.map",
     "index.html": "/fivestraight/index.html",
-    "precache-manifest.0efb66923e598666d9cf56c22c26c3bd.js": "/fivestraight/precache-manifest.0efb66923e598666d9cf56c22c26c3bd.js",
+    "precache-manifest.2d816c2f957a00c2b00dbecfb242a702.js": "/fivestraight/precache-manifest.2d816c2f957a00c2b00dbecfb242a702.js",
     "service-worker.js": "/fivestraight/service-worker.js",
     "static/js/2.2b25437e.chunk.js.LICENSE.txt": "/fivestraight/static/js/2.2b25437e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.486f4968.js",
     "static/js/2.2b25437e.chunk.js",
-    "static/js/main.f05b1ead.chunk.js"
+    "static/js/main.95339d5f.chunk.js"
   ]
 }
