@@ -15,9 +15,16 @@
 - [ ] Accessibility + Keyboard Play
 - [ ] LocalStorage for name + id login
 - [ ] Chat + Video
-- [ ] Design
+- [ ] Design (teaaaly pinky colors) cale will handle these box models
 - [ ] Mobile Views
 - [ ] 1 v 1 v 1
+- [ ] When you select a card, numbers on the board available change color
+- [ ] Front page shows all active games and player leaderboard
+- [ ] Able to join game in progress
+- [ ] Add click battle to choose color
+
+
+
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

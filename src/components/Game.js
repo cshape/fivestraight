@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Board from './Board'
 import InfoPane from './InfoPane'
 import io from "socket.io-client";
-const ENDPOINT = "https://fivestraightserver.herokuapp.com/";
-// const ENDPOINT = "http://127.0.0.1:4000"
+// const ENDPOINT = "https://fivestraightserver.herokuapp.com/";
+const ENDPOINT = "http://127.0.0.1:4000"
 const socket = io(ENDPOINT);
 
 const styles = {
@@ -85,6 +85,8 @@ const Game = () => {
         let name = prompt("What is your name?");
         setMyPlayer(name)
         socket.emit('create.game', name)
+        localStorage.setItem('fiveStraightName', name)
+        console.log(localStorage.getItem('fiveStraightName'))
     }
 
     const joinGame = () => {
@@ -145,8 +147,7 @@ const Game = () => {
         <>
         {isAGame ?
             <div styles={styles}>
-             <Board squares={game.board} onClick={playCard} />
-            <InfoPane 
+                <InfoPane 
                       game={game}
                       selected={selectedCard} 
                       cards={game.cards} 
@@ -154,6 +155,8 @@ const Game = () => {
                       pickUp={pickupCard}
                       myPlayer={myPlayer}
                       />
+             <Board squares={game.board} onClick={playCard} />
+            
             <p>The ID for this game is {game.uniqueID}</p>
             <h1>Players:</h1>
             {
